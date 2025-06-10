@@ -1,7 +1,28 @@
-import requests
-import urllib3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Simple Python sample script for enabling IPv6 and interface configuration
+on multiple devices with RESTCONF.
+------------
 
-urllib3.disable_warnings()
+Copyright (c) 2024 Cisco and/or its affiliates.
+This software is licensed to you under the terms of the Cisco Sample
+Code License, Version 1.1 (the "License"). You may obtain a copy of the
+License at
+
+               https://developer.cisco.com/docs/licenses
+
+All use of the material herein must be in accordance with the terms of
+the License. All rights not expressly granted by the License are
+reserved. Unless required by applicable law or agreed to separately in
+writing, software distributed under the License is distributed on an "AS
+IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+or implied.
+"""
+
+import requests
+
+requests.urllib3.disable_warnings()
 
 devices = [
     "198.18.7.2",
@@ -62,9 +83,10 @@ payload = {
         }
     }
 }
-for HOST in devices:
-    print(f"Configuring device {HOST}...", end=" ")
-    url = f"https://{HOST}:443/restconf/data/Cisco-IOS-XE-native:native/"
+
+for host in devices:
+    print(f"Configuring device {host}...", end=" ")
+    url = f"https://{host}:443/restconf/data/Cisco-IOS-XE-native:native/"
 
     header = {"Content-Type": "application/yang-data+json"}
 
@@ -72,7 +94,7 @@ for HOST in devices:
                             auth=(USERNAME, PASSWORD),
                             json=payload, verify=False)
 
-    if response.status_code in (200, 204):
+    if response.ok:
         print("Success!")
     else:
         print("Error!")
